@@ -46,7 +46,7 @@ def main(in_path, out_path, bulk, gosub_folder=True, scale="50"):
 
             if bulk == False:
                 scale = Question(
-                    "Resize all images by(%)?: ",
+                    "Resize image by(%)?: ",
                     "Invalid Answer Enter Integer Answers Only",
                 )
                 scale = scale.scale_setter()
