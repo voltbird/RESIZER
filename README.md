@@ -2,7 +2,7 @@
 A program that Resizes multiple image files (.jpg, .jpeg, .png, .gif) at once.
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-
+<br><br>
 <img width="1896" height="1023" alt="Screenshot (1)" src="https://github.com/user-attachments/assets/da4e3fd4-9b83-4e02-abe3-b1098011e198" />
 
 ## [DOWNLOAD THE LATEST VERSION (v1.0)](https://github.com/wassupmahboi/RESIZER/releases)
