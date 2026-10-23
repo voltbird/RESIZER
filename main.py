@@ -18,17 +18,17 @@ def resizer(in_path, out_path, bulk, gosub_folder=True, scale="50"):
         x = int(round(pic.size[0] * 0.01 * scale))
         y = int(round(pic.size[1] * 0.01 * scale))
         if scale <= 100:
-            new_pic = pic.resize((x, y), 1) #better quality for downsized images
+            new_pic = pic.resize((x, y), 1)  # better quality for downsized images
         elif scale > 100:
-            new_pic = pic.resize((x, y), 3) #better quality for upsize images
-        
-        pic_name = Path("RESIZED_"+pic_name)
+            new_pic = pic.resize((x, y), 3)  # better quality for upsize images
+
+        pic_name = Path("RESIZED_" + pic_name)
         image_at = Path(destination / pic_name)
 
         try:
             new_pic.save(image_at)
             if bulk == False:
-                startfile(destination/pic_name)
+                startfile(destination / pic_name)
             elif bulk == True:
                 pass
         except PermissionError:
@@ -46,7 +46,6 @@ def resizer(in_path, out_path, bulk, gosub_folder=True, scale="50"):
         prompt.warning("given input path doesn't exist! Restarting program...")
         main()
         return None
-        
 
     if gosub_folder:
         img_files = Path.rglob(in_path, "*")  # Checks for all files in subfolders too
@@ -75,6 +74,7 @@ def resizer(in_path, out_path, bulk, gosub_folder=True, scale="50"):
 
     startfile(destination)
 
+
 def main():
     while True:
 
@@ -99,8 +99,6 @@ def main():
                 prompt.warning("Path Doesn't Exist! Give A Valid file path")
                 continue
 
-            
-
     bulk = Question("Do you want to resize all the images at once? (Y/N): ")
     bulk = bulk.y_or_no()
 
@@ -117,11 +115,13 @@ def main():
 
     while True:
 
-        out_path = Question("Where to save the images? Leave it empty to save files outside input folder: ")
+        out_path = Question(
+            "Where to save the images? Leave it empty to save files outside input folder: "
+        )
         out_path = out_path.ask_destination()
 
         if out_path == Path(""):
-            out_path = Path(in_path.parent/"RESIZED_PHOTOS")
+            out_path = Path(in_path.parent / "RESIZED_PHOTOS")
             break
         else:
             if out_path.is_relative_to(in_path):
@@ -131,7 +131,6 @@ def main():
             elif out_path.is_relative_to(in_path) == False:
                 break
 
-
     resizer(
         in_path=in_path,
         bulk=bulk,
@@ -140,7 +139,8 @@ def main():
         out_path=out_path,
     )
 
-main() #runs the entire thing
+
+main()  # runs the entire thing
 
 
 prompt.subtle(prompt="\n\nMIT License\nCopyright (c) 2026 Sanjay S")
