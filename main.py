@@ -1,148 +1,84 @@
-from ntpath import exists, isfile
-
-import prompt
-from prompt import Question
-from prompt import startfile
+import os
 from pathlib import Path
 from PIL import Image
 
 
-def resizer(in_path, out_path, bulk, gosub_folder=True, scale="50"):
+def scale_setter(prompt):
 
-    prompt.title(prompt="Going Through: ")
-    prompt.title(prompt=in_path)
-    prompt.see(prompt="Resizing... ")
-
-    def resize(img, scale, destination, pic_name):
-        pic = Image.open(img)
-        x = int(round(pic.size[0] * 0.01 * scale))
-        y = int(round(pic.size[1] * 0.01 * scale))
-        if scale <= 100:
-            new_pic = pic.resize((x, y), 1)  # better quality for downsized images
-        elif scale > 100:
-            new_pic = pic.resize((x, y), 3)  # better quality for upsize images
-
-        pic_name = Path("RESIZED_" + pic_name)
-        image_at = Path(destination / pic_name)
-
+    while True:
         try:
-            new_pic.save(image_at)
-            if bulk == False:
-                startfile(destination / pic_name)
-            elif bulk == True:
-                pass
-        except PermissionError:
-            prompt.warning(
-                prompt="You do not have permission to save at "
-                + str(destination)
-                + "\nPlease Restart the Program"
-            )
+            scale = int(input(prompt))
+            return scale
+        except ValueError:
+            print("INVALID INPUT. INTEGER ANSWERS ONLY.")
+            continue
 
+
+def y_or_n(prompt):
+
+    answers = {"Y": True, "N": False}
+    while True:
+        ans = input(prompt).upper()
+        if ans in [*answers]:
+            return answers[ans]
+        else:
+            print("INVALID INPUT. (Y/N) ANSWERS ONLY.")
+            continue
+
+
+def main(file_path, bulk, gosub_folder=True, scale="50"):
+
+    print("Going Through: ")
+    print(file_path)
     patterns = ("*.jpg", "*.png", "*.gif", "*.jpeg")
-    destination = Path(out_path)
-    try:
-        destination.mkdir(parents=True, exist_ok=True)
-    except OSError:
-        prompt.warning("given input path doesn't exist! Restarting program...")
-        main()
-        return None
-
+    destination = Path(file_path.parent / "RESIZED_PHOTOS")
+    destination.mkdir(parents=True, exist_ok=True)
     if gosub_folder:
-        img_files = Path.rglob(in_path, "*")  # Checks for all files in subfolders too
+        img_files = Path.rglob(file_path, "*")
     else:
-        img_files = Path.glob(in_path, "*")
-
+        img_files = Path.glob(file_path, "*")
     for img in img_files:
         if any(img.match(pat) for pat in patterns):
             pic_name = img.name
-            prompt.see(prompt=img)
-
+            print(img)
             if bulk == False:
-                scale = Question(
-                    "Resize image by(%)?: ",
-                    "Invalid Answer Enter Integer Answers Only",
-                )
-                scale = scale.scale_setter()
-            elif bulk == True:
-                pass
+                scale = scale_setter("Resize image by (%): ")
+                pic = Image.open(img)
+                x = int(round(pic.size[0] * 0.01 * scale))
+                y = int(round(pic.size[1] * 0.01 * scale))
+                new_pic = pic.resize((x, y))
+                image_at = Path(destination / pic_name)
+                new_pic.save(image_at)
+                os.startfile(image_at)
+            else:
+                pic = Image.open(img)
+                x = int(round(pic.size[0] * 0.01 * scale))
+                y = int(round(pic.size[1] * 0.01 * scale))
+                new_pic = pic.resize((x, y))
+                image_at = Path(destination / pic_name)
+                new_pic.save(image_at)
+                os.startfile(destination)
+    print("\n\nYou can find the resized images at: " + str(destination))
 
-            resize(img, scale, destination, pic_name)
 
-    prompt.title(
-        prompt="\n\nYou can find the resized images at: " + str(destination) + "\n"
-    )
+if __name__ == "__main__":
+    file_path = Path.cwd()
+    scale = "50"
 
-    startfile(destination)
+    gosub_folder = y_or_n("Resize the files in the sub folders?(Y/N): ")
 
-
-def main():
-    while True:
-
-        prompt.warning("press ctrl+C to terminate program anytime")
-        in_path = Question(
-            "Which Folder has the images? Leave empty to use folder where program is saved: ",
-            "The Path doesn't exist or You don't have Permission to Access it",
-        )
-        in_path = in_path.ask_destination()
-
-        if in_path == Path(""):
-            in_path = Path.cwd()
-            break
-        else:
-            if in_path.exists() == True:
-                if in_path.is_file():
-                    prompt.warning("It is a file path! give a folder path!")
-                    continue
-                else:
-                    break
-            elif in_path.exists() == False:
-                prompt.warning("Path Doesn't Exist! Give A Valid file path")
-                continue
-
-    bulk = Question("Do you want to resize all the images at once? (Y/N): ")
-    bulk = bulk.y_or_no()
-
+    bulk = y_or_n("Resize all files as a group?(Y/N): ")
     if bulk:
-        scale = Question(
-            "Resize all images by(%)?: ", "Invalid Answer Enter Integer Answers Only"
-        )
-        scale = scale.scale_setter()
-    elif bulk == False:
-        scale = None
+        scale = scale_setter("Resize all images by (%): ")
+        pass
+    else:
+        pass
 
-    gosub_folder = Question("Resize the files in the sub folders?(Y/N): ")
-    gosub_folder = gosub_folder.y_or_no()
+    main(file_path=file_path, bulk=bulk, scale=scale, gosub_folder=gosub_folder)
 
-    while True:
+    print("""\n\n
+MIT License
 
-        out_path = Question(
-            "Where to save the images? Leave it empty to save files outside input folder: "
-        )
-        out_path = out_path.ask_destination()
-
-        if out_path == Path(""):
-            out_path = Path(in_path.parent / "RESIZED_PHOTOS")
-            break
-        else:
-            if out_path.is_relative_to(in_path):
-                prompt.warning("Output Path is a subfolder")
-                print("")
-                continue
-            elif out_path.is_relative_to(in_path) == False:
-                break
-
-    resizer(
-        in_path=in_path,
-        bulk=bulk,
-        scale=scale,
-        gosub_folder=gosub_folder,
-        out_path=out_path,
-    )
-
-
-main()  # runs the entire thing
-
-
-prompt.subtle(prompt="\n\nMIT License\nCopyright (c) 2026 Sanjay S")
-
-input("\n\nPress Enter to close....")
+Copyright (c) 2026 Sanjay S
+""")
+    input("\n\nPress Enter to close....")
