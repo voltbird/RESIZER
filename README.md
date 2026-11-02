@@ -12,6 +12,9 @@ A program that Resizes multiple image files (.jpg, .jpeg, .png, .gif) at once. *
 - **NOTE: THE FOLDER CAN HAVE FILES OTHER THAN IMAGES AND/OR SUBFOLDERS WITH IMAGE FILES. YOU CAN CHOOSE TO RESIZE THE IMAGES IN THE SUBFOLDER. IT WILL SKIP ALL OTHER NON-IMAGE FILES**
 
 ## USING PYTHON:
+- Unzip the zip file. Inside you will find main.py and prompt.py
+- Right click and select "Open in terminal".
+- Run `python main.py`
 - If you are using the [python code](https://github.com/voltbird/RESIZER/archive/refs/heads/main.zip), make sure you have the following libraries downloaded:
   1. os
   2. pathlib
