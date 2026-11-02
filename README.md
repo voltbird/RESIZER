@@ -15,7 +15,7 @@ A program that Resizes multiple image files (.jpg, .jpeg, .png, .gif) at once. *
 - Unzip the zip file. Inside you will find main.py and prompt.py
 - Right click and select "Open in terminal".
 - Run `python main.py`
-- If you are using the [python code](https://github.com/voltbird/RESIZER/archive/refs/heads/main.zip), make sure you have the following libraries downloaded:
+- If you are using the [main python code](https://github.com/voltbird/RESIZER/archive/refs/heads/main.zip), make sure you have the following libraries downloaded:
   1. os
   2. pathlib
   3. pillow **[This is usually the one which is not pre installed with Python]**
