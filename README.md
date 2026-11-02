@@ -28,7 +28,7 @@ A program that Resizes multiple image files (.jpg, .jpeg, .png, .gif) at once. *
 
 <img width="1920" height="927" alt="Screenshot 2026-07-28 235053" src="https://github.com/user-attachments/assets/5e11fd9f-59e9-4dd4-a8cd-99df5ccc0731" />
 
-## What's New (v1.5.0)
+# What's New (v1.5.0)
 - Using LANCZOS, BICUBIC to resize images.
 - Better UI.
 - Option to load and save images wherever you want.
